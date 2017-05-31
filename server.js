@@ -3,7 +3,15 @@ var app = express();
 var path = require( 'path' );
 var bodyParser= require( 'body-parser' );
 var urlencodedParser = bodyParser.urlencoded( {extended: false } );
+var pg = require('pg');
 var port = process.env.PORT || 8080;
+var config = {
+  dataBase: 'test',
+  host: 'localhost',
+  port: 5432,
+  max: 12
+};
+var pool = new pg.Pool( config );
 // static folder
 app.use( express.static( 'public' ) );
 
@@ -21,12 +29,30 @@ app.get( '/', function( req, res ){
 // get koalas
 app.get( '/koalas', function( req, res ){
   console.log( 'GET koalas route hit' );
-  //assemble object to send
-  var objectToSend={
-    response: 'from GET koalas route'
-  }; //end objectToSend
-  //send info back to client
-  res.send( objectToSend );
+  pool.connect( function(err, connection, done){
+    if (err){
+      console.log('error in connection', err);
+      done();
+      res.send('error');
+    }
+    else {
+      console.log('successful connection to DB');
+      var koalasData = [];
+
+      var resultFromDB = connection.query( "SELECT * FROM koalas");
+      // console.log(resultFromDB);
+      //
+      // resultFromDB.on( 'row', function(row){
+      //   console.log(row);
+      //   koalasData.push(row);
+      // });
+      // resultFromDB.on( 'end', function(){
+      //   done();
+      //   res.send(koalasData);
+      // });
+
+    }
+  });
 });
 
 // add koala
