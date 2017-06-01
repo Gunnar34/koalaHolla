@@ -31,6 +31,16 @@ var getKoalas = function(){
     type: 'GET',
     success: function( data ){
       console.log( 'got some koalas: ', data );
+    for (var i = 0; i < data.length; i++) {
+
+      $('#viewKoalas').append('<p> name: ' + data[i].koala_name + ' age: ' + data[i].age + ' notes: ' + data[i].notes + '</p>');
+      if(data[i].ready4transfer){
+        $('#viewKoalas').append('<p>'+ data[i].koala_name + ' is ready to be transfered</p> <br>');
+      }
+      else {
+        $('#viewKoalas').append('<p>' + data[i].koala_name + ' is not ready to be transfered</p> <br>');
+      }
+    }
     } // end success
   }); //end ajax
   // display on DOM with buttons that allow edit of each
