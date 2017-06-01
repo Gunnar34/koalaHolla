@@ -29,27 +29,26 @@ app.get( '/', function( req, res ){
 // get koalas
 app.get( '/koalas', function( req, res ){
   console.log( 'GET koalas route hit' );
-  pool.connect( function(err, connection, done){
+  pool.connect( function( err , connection , done ){
     if (err){
       console.log('error in connection', err);
       done();
-      res.send('error');
+      res.send( 400 );
     }
     else {
       console.log('successful connection to DB');
       var koalasData = [];
 
-      var resultFromDB = connection.query( "SELECT * FROM koalas");
-      // console.log(resultFromDB);
-      //
-      // resultFromDB.on( 'row', function(row){
-      //   console.log(row);
-      //   koalasData.push(row);
-      // });
-      // resultFromDB.on( 'end', function(){
-      //   done();
-      //   res.send(koalasData);
-      // });
+      var dataResult = connection.query( "SELECT * FROM koalas");
+
+      dataResult.on( 'row', function(row){
+        console.log(row);
+        koalasData.push(row);
+      });
+      dataResult.on( 'end', function(){
+        done();
+        res.send(koalasData);
+      });
 
     }
   });
