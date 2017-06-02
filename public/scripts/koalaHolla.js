@@ -12,11 +12,11 @@ $( document ).ready( function(){
     // NOT WORKING YET :(
     // using a test object
     var objectToSend = {
-      name: 'testName',
-      age: 'testName',
-      sex: 'testName',
-      readyForTransfer: 'testName',
-      notes: 'testName',
+      name: $('#nameIn').val(),
+      age: $('#ageIn').val(),
+      sex: $('#sexIn').val(),
+      readyForTransfer: $('#readyForTransferIn').val(),
+      notes: $('#notesIn').val(),
     };
     // call saveKoala with the new obejct
     saveKoala( objectToSend );
@@ -33,7 +33,7 @@ var getKoalas = function(){
       console.log( 'got some koalas: ', data );
     for (var i = 0; i < data.length; i++) {
 
-      $('#viewKoalas').append('<p> name: ' + data[i].koala_name + ' age: ' + data[i].age + ' notes: ' + data[i].notes + '</p>');
+      $('#viewKoalas').append('<p> name: ' + data[i].koala_name + ' age: ' + data[i].age + ' sex: ' + data[i].sex + ' notes: ' + data[i].notes + '</p>');
       if(data[i].ready4transfer){
         $('#viewKoalas').append('<p>'+ data[i].koala_name + ' is ready to be transfered</p> <br>');
       }
@@ -55,6 +55,14 @@ var saveKoala = function( newKoala ){
     data: newKoala,
     success: function( data ){
       console.log( 'got some koalas: ', data );
-    } // end success
-  }); //end ajax
+      $('#viewKoalas').append('<p> name: ' + newKoala.name + ' age: ' + newKoala.age + ' sex: ' + newKoala.sex + ' notes: ' + newKoala.notes + '</p>');
+      if(newKoala.readyForTransfer){
+        $('#viewKoalas').append('<p>'+ newKoalaname + ' is ready to be transfered</p> <br>');
+      }
+      else {
+        $('#viewKoalas').append('<p>' + newKoala.name + ' is not ready to be transfered</p> <br>');
+    }
+    // end success
+  } //end ajax
+});
 };

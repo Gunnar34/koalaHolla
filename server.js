@@ -30,6 +30,7 @@ app.get( '/', function( req, res ){
 app.get( '/koalas', function( req, res ){
   console.log( 'GET koalas route hit' );
   pool.connect( function( err , connection , done ){
+  var koalasData = [];
     if (err){
       console.log('error in connection', err);
       done();
@@ -37,7 +38,6 @@ app.get( '/koalas', function( req, res ){
     }
     else {
       console.log('successful connection to DB');
-      var koalasData = [];
 
       var dataResult = connection.query( "SELECT * FROM koalas");
 
@@ -57,12 +57,21 @@ app.get( '/koalas', function( req, res ){
 // add koala
 app.post( '/koalas', urlencodedParser, function( req, res ){
   console.log( 'POST koalas route hit' );
-  //assemble object to send
-  var objectToSend={
-    response: 'from POST koalas route'
-  }; //end objectToSend
-  //send info back to client
-  res.send( objectToSend );
+  console.log(req.body);
+  var koala = req.body;
+  pool.connect( function( err , connection , done ){
+    if (err){
+      console.log('error in connection', err);
+      done();
+      res.send( 400 );
+    }
+    else {
+        var dataPush = connection.query("INSERT INTO Koalas (koala_name, Sex, Age, Ready4Transfer, Notes ) Values" +
+      "('" + koala.name + "', '"+ koala.sex + "', '" + koala.age + "', '" + koala.readyForTransfer + "', '" + koala.notes + "')");
+      res.send('success');
+}
+    });
+
 });
 
 // add koala
